@@ -1,32 +1,5 @@
 --[[#############################################################################
-GPS Telemetry Screen for Taranis x7 / x9 lite (128x64 displays)
-Copyright (C) by mosch   
-License GPLv2: http://www.gnu.org/licenses/gpl-2.0.html       
-GITHUB: https://github.com/moschotto?tab=repositories 
-
-"TELEMETRY screen - GPS last known postions v2.5"  
-
- 
-Description:
-How to find your model in case of a crash, power loss etc? Right, check the last 
-GPS coordinates and type it into to your mobile phone...
-
-- Shows and logs GPS related information. log file will be generated in
-/LOGS/GPSpositions.txt
-
-- GPS logfile can be viewed with the GPSviewer.lua" (check github) on the radio
-
-- in case that the telemetry stops, the last coordinates will remain on the screen
-
-- distance to your home position - how far you need to walk ;)
-
-- Reset telemetry data and total distance via "long press enter"
-
-Install:
-copy GPS.lua to /SCRIPTS/TELEMETRY
-copy the ICON folder to /SCRIPTS/TELEMETRY/BMP
-Setup a "screen (DIsplay 13/13)" and select GPS.lua
-
+GPS Telemetry Screen 
 ################################################################################]]
 
 log_filename = "/LOGS/GPSpositions.txt"
@@ -52,7 +25,6 @@ local log_write_dist = 10
 local old_time_write = 0
 local update = true
 local reset = false
-local string_gmatch = string.gmatch
 local now = 0
 local ctr = 0
 local coordinates_prev = 0
@@ -66,8 +38,6 @@ local e_gpsPrevLON = 0
 
 local e_log_write_wait_time = 25
 local e_old_time_write = 0
-
-local wait = 100
 
 local function rnd(v,d)
 	if d then
@@ -126,8 +96,6 @@ local function concatenate_array(arr)
 end
 
 local function write_e_log(str)
-
-
 	file = io.open(log_filename, "w")   
 	io.write(file, str)	
 	io.close(file)
@@ -197,15 +165,6 @@ local function getTelemetryId(name)
 		return-1
 	end
 end
-
-local function debugWrite()
-	local file = io.open(debugFileName, "a") 
-		io.write(file, "debug", "\r\n")
-	io.close(file)
-	
-end
-
-
 
 local function init()  		
 	emergencyLog = {}		
