@@ -4,7 +4,6 @@ GPS Telemetry Screen
 
 log_filename = "/LOGS/GPSpositions.txt"
 log_filename_1 = "/LOGS/GPSpositions-1.txt"
-local debugFileName = "/LOGS/debug.txt"
 local gpsLAT = 0
 local gpsLON = 0
 local gpsLAT_H = 0
@@ -90,7 +89,7 @@ end
 local function concatenate_array(arr)
 	local result_string = ""
 	for i = 1, #arr do
-	  result_string = result_string .. arr[i]
+		result_string = result_string ..string.format("%02d",i)..", ".. arr[i]
 	end
 	return result_string
 end
@@ -105,7 +104,7 @@ local function reset_e_log()
 	file = io.open(log_filename, "w") 
 	-- local str = "Number,LAT,LON,radio_time,satellites,GPSalt,GPSspeed\r\n"
 	-- e_log = {"Number,LAT,LON,radio_time,satellites,GPSalt,GPSspeed\r\n"}
-	e_log = {"00, 00.000000, 00.000000, 00:00:00, 0, 0, 0\r\n"}
+	e_log = {"00.000000, 00.000000, 00:00:00, 0, 0, 0\r\n"}
 	
 
 	io.write(file, concatenate_array(e_log))		
@@ -134,8 +133,8 @@ local function write_log()
 	if (dist > e_dist_wait) and (e_old_time_write + e_log_write_wait_time< now) then
 		e_gpsPrevLAT = gpsLAT
 		e_gpsPrevLON = gpsLON
-		
-		fill_emegrency_log("00"..", ".. gpsLAT..", " .. gpsLON ..",".. time_power_on ..", "..  gpsSATS..", ".. gpsALT ..", ".. gpsSpeed.."\r\n")
+		-- 
+		fill_emegrency_log( gpsLAT..", " .. gpsLON ..",".. time_power_on ..", "..  gpsSATS..", ".. gpsALT ..", ".. gpsSpeed.."\r\n")
 		write_e_log(concatenate_array(e_log))
 		e_old_time_write = now
 
