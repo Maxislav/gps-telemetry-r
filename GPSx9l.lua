@@ -166,7 +166,6 @@ local function getTelemetryId(name)
 end
 
 local function init()  		
-	emergencyLog = {}		
 	gpsId = getTelemetryId("GPS")
 	--number of satellites crossfire
 	gpssatId = getTelemetryId("Sats")
@@ -313,6 +312,17 @@ local function shiftContent()
 	buffer = nil
 	
 end
+
+local function removeLeadNum(str)
+	local comma_index = string.find(str, ",")
+
+	if comma_index then
+		local new_str = string.sub(str, comma_index + 1)
+		return new_str
+	else
+		return str
+	end
+end
  
 --main function 
 local function run(event)  
@@ -373,9 +383,12 @@ local function run(event)
 			lcd.drawText(20,29, "home not set. reset", SMLSIZE + INVERS + BLINK)
 			lcd.drawText(20,37, "telem. after GPS FIX!", SMLSIZE + INVERS + BLINK)
 		end
+
+		local comma_index = string.find(coordinates_prev, ",");
+
 				
-		lcd.drawText(20,47, coordinates_prev,SMLSIZE)
-		lcd.drawText(20,56, coordinates_current,SMLSIZE)
+		lcd.drawText(20,47, gpsPrevLAT..", " .. gpsPrevLON ,SMLSIZE)
+		lcd.drawText(20,56, gpsLAT..", " .. gpsLON ,SMLSIZE)
 		e_reset = true
 		
 	--blink if telemetry stops
