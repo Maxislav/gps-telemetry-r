@@ -41,8 +41,8 @@ local function Viewer_Draw_LCD(i)
     lcd.clear()
 	lcd.drawLine(0,0,0,64, SOLID, FORCE)
 	lcd.drawLine(127,0,127,64, SOLID, FORCE)
-	lcd.drawText(2,1,"GPS stats viewer v1.2" ,SMLSIZE)
-    lcd.drawLine(0,63,127,63, SOLID, FORCE)
+	lcd.drawText(2,1,"GPS stats viewer R" ,SMLSIZE)	
+    lcd.drawLine(0,63,127,63, SOLID, FORCE)	
     lcd.drawFilledRectangle(1,0, 126, 9, GREY_DEFAULT)
 	--lcd.drawFilledRectangle(1,0, 126, 9, GREY_DEFAULT)
 
@@ -50,7 +50,7 @@ local function Viewer_Draw_LCD(i)
     local y = 12
     for i = 1, #arr do
         local line = splitstring(arr[i])
-        lcd.drawText(2,y, line[1] .."," .. line[2]..",".. line[3], SMLSIZE)
+        lcd.drawText(2,y, line[1] .."," .. line[2]..",".. line[3].. ","..line[4], SMLSIZE)
         y = y + 10
     end
 end
@@ -72,10 +72,8 @@ local function Viewer_Init()
 		--read file contents into array/table
 		for line in string_gmatch(buffer, "([^\n]+)\n") do
 			if not string.find(line, "Number")  then --exclude logfile headline
-                local first_comma_index = string.find(line, ",")
-                local new_str = tostring(linectr) .. string.sub(line, first_comma_index)
-				coordinates[linectr] = new_str
-				linectr = linectr + 1
+				coordinates[linectr] = line	
+				linectr = linectr + 1	
 			end
 		end
 
