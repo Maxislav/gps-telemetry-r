@@ -50,7 +50,7 @@ local function Viewer_Draw_LCD(i)
     local y = 12
     for i = 1, #arr do
         local line = splitstring(arr[i])
-        lcd.drawText(2,y, line[1] .."," .. line[2]..",".. line[3].. ","..line[4], SMLSIZE)
+        lcd.drawText(2,y, line[1] .."," .. line[2]..",".. line[3].. ","..line[5], SMLSIZE)
         y = y + 10
     end
 end
