@@ -33,20 +33,17 @@
             top: 10px;
             z-index: 2;
         }
-        .my-div-icon {
-                background-color: rgba(255, 255, 255, 0.7);
-                font-size: 12px;
-                border-radius: 50%;
-                border: 1px solid purple;
-                text-align: center;
-                line-height: 24px;
-                opacity: 0;
+        .my-div-icon{
+            background-color: rgba(255,255,255, 0.8);
+            padding: 10px;
+            margin: auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 0 12px -2px;
         }
         
-        .my-div-icon:hover {
-          opacity: 1;
-          cursor: crosshair;
-        }
     </style>
 </head>
 
@@ -56,7 +53,7 @@
 
     <div id="map"></div>
     <div class="content__select-text">
-        <input type="file" id="fileInput" accept=".txt">
+        <input type="file" id="fileInput" accept=".txt, .csv">
     </div>
 </div>
 
@@ -70,16 +67,6 @@
     const fileInput = document.getElementById('fileInput');
     const fileContentDiv = document.getElementById('fileContent');
 
-    var greenIcon = L.icon({
-        iconUrl: 'leaf-green.png',
-        shadowUrl: 'leaf-shadow.png',
-
-        iconSize:     [38, 95], // size of the icon
-        shadowSize:   [50, 64], // size of the shadow
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        shadowAnchor: [4, 62],  // the same for the shadow
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-    });
 
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
@@ -109,18 +96,21 @@
     function addPoliline(points) {
         polyline = L.polyline(points).addTo(map);
     }
-
+   
     function addMarkers(points) {
         markers = [];
         points.forEach((p, index) => {
+            var icon = L.divIcon({
+                className: 'my-div-icon',
+                html: `<a>${index+1}</a>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+
+            })
             markers.push(
                 L.marker(p, {
-                    icon: L.divIcon({
-                        iconSize:[24, 24],
-                        className: 'my-div-icon',
-                        html: "<a class='my-div-icon__number'>"+(index+1)+"</a>",
-                        iconAnchor:   [12, 12]
-                    })
+                    icon
+                  
                 }).addTo(map)
             )
         })
@@ -135,20 +125,42 @@
         const result = [];
 
         // Skip the header line
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (line) {
-                const values = line.split(',');
-                if (isNumeric(values[1]) && isNumeric(values[2])) {
-                    const lat = parseFloat(values[1].trim());
-                    const lon = parseFloat(values[2].trim());
-                    if (!isNaN(lat) && !isNaN(lon)) {
-                        result.push([lat, lon]);
-                    }
-                }
+        
 
+        if(lines[0] && -1<lines[0].split(',').findIndex((it)=> it == 'GPS')){
+            let index = lines[0].split(',').findIndex((it)=> it == 'GPS');
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                const gps = line.split(',')[index]?.split(/\s+/);    
+                if(gps){
+                    const lat = parseFloat(gps[0]);
+                    const lon = parseFloat(gps[1])
+                    result.push([lat, lon]);
+                }
+                
+            }
+        }else{
+            for (let i = 0; i < lines.length-1; i++) {
+            //Date,Time,1RSS(dB),2RSS(dB),RQly(%),RSNR(dB),ANT,RFMD,TPWR(mW),TRSS(dB),TQly(%),TSNR(dB),GPS,GSpd(kmh),Hdg(@),Alt(m),Sats,RxBt(V),Curr(A),Capa(mAh),Bat%(%),Ptch(rad),Roll(rad),Yaw(rad),FM,Rud,Ele,Thr,Ail,S1,S2,SA,SB,SC,SD,SE,SF,LSW,TxBat(V)
+                const line = lines[i].trim();
+
+
+
+                if (line) {
+                    const values = line.split(',');
+                    if (isNumeric(values[1]) && isNumeric(values[2])) {
+                        const lat = parseFloat(values[1].trim());
+                        const lon = parseFloat(values[2].trim());
+                        if (!isNaN(lat) && !isNaN(lon)) {
+                            result.push([lat, lon]);
+                        }
+                    }
+
+                }
             }
         }
+
+        
 
         return result;
     }
