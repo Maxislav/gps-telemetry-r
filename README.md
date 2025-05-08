@@ -1,4 +1,4 @@
-# gps-telemetry-r
+# gps-telemetry-ravlyk
 Save telemetry logs
 
 ## Installation for non color screen radios:
